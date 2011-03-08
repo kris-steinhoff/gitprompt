@@ -1,4 +1,4 @@
-export PROMPT_COMMAND=git-prompt
+export PROMPT_COMMAND=gitprompt
 
 COLOR_PROMPT_RED="\[\e[31m\]"
 COLOR_PROMPT_GREEN="\[\e[32m\]"
@@ -38,7 +38,7 @@ else
     export PROMPT_CHAR="$"
 fi
 
-git-prompt()
+gitprompt()
 {
     PREV_RET_VAL=$?;
 
