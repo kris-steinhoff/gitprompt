@@ -39,20 +39,59 @@ gitprompt()
         fi
         COMMIT=`git log -1 2> /dev/null | head -1 | awk '{print $2}' | cut -c 1-7`
         INFO=${INFO}${COMMIT};
-        git status 2> /dev/null | tail -n1 | grep 'working directory clean' &> /dev/null; rc=$?
+        STATE_COLOR=${COLOR_PROMPT_RED}
+
+        GIT_ST="/tmp/GIT_ST_${USER}_${$}"
+        git status 2> /dev/null 1> $GIT_ST
+
+        cat $GIT_ST | tail -n1 | grep 'working directory clean' &> /dev/null; rc=$?
         if [ $rc -eq 0 ]; then
             STATE_COLOR=${COLOR_PROMPT_GREEN}
-        else
+        fi
+
+        cat $GIT_ST | grep 'Changes to be committed' &> /dev/null; rc=$?
+        if [ $rc -eq 0 ]; then
+            STATE_COLOR=${COLOR_PROMPT_YELLOW}
+        fi
+
+        cat $GIT_ST | grep 'Changed but not updated' &> /dev/null; rc=$?
+        if [ $rc -eq 0 ]; then
             STATE_COLOR=${COLOR_PROMPT_RED}
         fi
+
+        cat $GIT_ST | grep 'Untracked files' &> /dev/null; rc=$?
+        if [ $rc -eq 0 ]; then
+            STATE_COLOR=${COLOR_PROMPT_RED}
+        fi
+
+        if [ "$BRANCH" = "(no branch)" ]; then
+            STATE_COLOR=${COLOR_PROMPT_CYAN}
+        fi
+
         PS1="${PS1} ${STATE_COLOR}[${INFO}]${COLOR_PROMPT_NONE}"
 
-        for remote in `git remote`; do
-            remote_branch=`git remote show -n ${remote} | grep "${BRANCH} *merges with remote" | awk -F" merges with remote " '{print $2}'`
-            if [ "x$remote_branch" != "x" ]; then
-                PS1="${PS1} ${COLOR_PROMPT_MAGENTA}${remote}/${remote_branch}${COLOR_PROMPT_NONE}"
-            fi
-        done
+        git_version=`git --version | awk '{print $3}' | awk -F. '{print $1"."$2}'`
+        case $git_version in
+            "1.5"|"1.6")
+            for remote in `git remote`; do                        remote_branch=`git remote show -n $remote | grep -A1 "while on     
+                branch ${BRANCH}" | grep '^    .*$' | sed 's/^[ \t]*//;s/[ \t]*$//'`
+                if [ "x$remote_branch" != "x" ]; then                            PS1="${PS1} ${COLOR_PROMPT_MAGENTA}${remote}/                  
+                    ${remote_branch}${COLOR_PROMPT_NONE}"
+                fi
+            done
+            ;;
+
+            "1.7")
+            for remote in `git remote`; do
+                remote_branch=`git remote show -n ${remote} | grep "${BRANCH} *    
+                merges with remote" | awk -F" merges with remote " '{print $2}'`
+                if [ "x$remote_branch" != "x" ]; then
+                    PS1="${PS1} ${COLOR_PROMPT_MAGENTA}${remote}/                  
+                    ${remote_branch}${COLOR_PROMPT_NONE}"
+                fi
+            done
+            ;;
+        esac
     fi
 
     if test $PREV_RET_VAL -eq 0
