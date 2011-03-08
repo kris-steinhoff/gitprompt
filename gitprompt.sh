@@ -1,5 +1,3 @@
-export PROMPT_COMMAND=gitprompt
-
 COLOR_PROMPT_RED="\[\e[31m\]"
 COLOR_PROMPT_GREEN="\[\e[32m\]"
 COLOR_PROMPT_YELLOW="\[\e[33m\]"
@@ -80,3 +78,5 @@ gitprompt()
         PS1="${PS1}\n${COLOR_PROMPT_RED}[${PREV_RET_VAL}] ${PROMPT_CHAR}${COLOR_PROMPT_NONE} "
     fi
 }
+
+export PROMPT_COMMAND=gitprompt
