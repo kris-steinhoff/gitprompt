@@ -92,6 +92,10 @@ gitprompt()
         esac
     fi
 
+    if [ "x" != "x$VIRTUAL_ENV" ]; then
+        PS1="${PS1} ${COLOR_PROMPT_BLUE}(`basename ${VIRTUAL_ENV}`)${COLOR_PROMPT_NONE}"
+    fi
+
     if test $PREV_RET_VAL -eq 0
     then
         PS1="${PS1}\n${COLOR_PROMPT_GREEN}${PROMPT_CHAR}${COLOR_PROMPT_NONE} "
