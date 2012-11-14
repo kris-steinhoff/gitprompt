@@ -102,14 +102,6 @@ gitprompt()
     else
         PS1="${PS1}\n${COLOR_PROMPT_RED}[${PREV_RET_VAL}] ${PROMPT_CHAR}${COLOR_PROMPT_NONE} "
     fi
-
-    if [ ! ${HOST} ]; then
-        HOST=`hostname`
-    fi
-    TITLE=${HOST}:${PWD}
-
-    echo -ne "\033]0;${TITLE}\007"
-
 }
 
 export PROMPT_COMMAND=gitprompt
