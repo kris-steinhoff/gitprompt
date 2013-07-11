@@ -71,7 +71,7 @@ prompt_git()
             STATE_COLOR=${COLOR_PROMPT_CYAN}
         fi
 
-        echo "${STATE_COLOR}[${INFO}]${COLOR_PROMPT_NONE}"
+        echo -n "${STATE_COLOR}[${INFO}]${COLOR_PROMPT_NONE}"
 
         git_version=`git --version | awk '{print $3}' | awk -F. '{print $1"."$2}'`
         case $git_version in
