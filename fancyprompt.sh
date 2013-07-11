@@ -122,4 +122,6 @@ fancy_prompt()
     PREV_RET_VAL=$?;
 
     PS1="`prompt_context` `prompt_virtualenv`\n`prompt_rc`${COLOR_PROMPT_YELLOW}${PROMPT_CHAR}${COLOR_PROMPT_NONE} "
+    prompt_window_title
+
 }
